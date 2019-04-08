@@ -3,10 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class system_frontend {
-    private JTextArea textArea1;
-    private JTextPane textPane1;
     private JButton button1;
-    private JList contract_list;
 
     main test = new main();
 
