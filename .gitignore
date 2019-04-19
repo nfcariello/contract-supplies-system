@@ -33,6 +33,9 @@ hs_err_pid*
 
 # Java class files
 *.class
+*.idea
+.idea
+*.iml
 
 # Generated files
 bin/
