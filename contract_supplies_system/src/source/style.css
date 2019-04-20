@@ -2,3 +2,39 @@
     -fx-background-color: radial-gradient(focus-distance 0%, center 52% 52%, radius 44%, #FFAFBD, #FFC3A0);
 }
 
+.button {
+    -fx-font-family: Helvetica;
+    -fx-text-fill: black;
+    -fx-background-color: #ddd;
+    -fx-border: none;
+    -fx-color: black;
+    -fx-font-size: 16px;
+    -fx-start-margin: 20;
+    -fx-end-margin: 20;
+    -fx-pref-height: 60;
+    -fx-pref-width: 150;
+    -fx-padding: 10px 20px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-display: inline-block;
+    -fx-margin: 4px 2px;
+    -fx-cursor: pointer;
+    -fx-border-radius: 16px;
+}
+
+.button:hover {
+    -fx-background-color: #f1f1f1;
+}
+
+.sidebar {
+    -fx-padding: 30px 0 10px 15px;
+}
+
+.logo {
+    -fx-start-margin: 20;
+    -fx-end-margin: 20;
+    -fx-pref-height: 60;
+    -fx-pref-width: 120;
+    -fx-padding: 3rem 0px 3rem 0px;
+    -fx-background-color: BLACK;
+}
