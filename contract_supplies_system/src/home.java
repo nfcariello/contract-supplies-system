@@ -1,8 +1,6 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +13,7 @@ import java.io.FileNotFoundException;
 public class home extends SideBar {
 
 
+    private final MainView mainView = new MainView();
 
     public static void main(String[] args) {
         launch(args);
@@ -39,19 +38,21 @@ public class home extends SideBar {
         borderPane.setLeft(sideBar);
 
 //        Project View
-        VBox projectView = getProjectView();
+        VBox projectView = mainView.getProjectView();
 
 //        Item View
-        VBox itemView = getItemView();
+        VBox itemView = mainView.getItemView();
 
 //        Contract View
-        VBox contractView = getContractView();
+        VBox contractView = mainView.getContractView();
 
 //        Supplier View
-        VBox supplierView = getSupplierView();
+        VBox supplierView = mainView.getSupplierView();
 
-//
+//        Order View
+        VBox orderView = mainView.getOrderView();
 
+//        Main
         borderPane.setCenter(projectView);
 
 //        Project Button
@@ -76,7 +77,7 @@ public class home extends SideBar {
 
 //        Order Button
         orderBtn.setOnAction(value -> {
-//            TODO - Create Order View
+            borderPane.setCenter(orderView);
         });
 
         primaryStage.setTitle("Turner Construction System | Contract-Supplies System");
@@ -86,91 +87,48 @@ public class home extends SideBar {
         primaryStage.show();
     }
 
-    private VBox getSupplierView() {
-        VBox supplierView = new VBox(20);
-        supplierView.getStyleClass().add("container");
-        Label supplierTitle = getTitleLabel("Create Supplier", "title");
-        HBox supplierNameHBox = getFormTextfield(10, "Supplier Name");
-        HBox supplierAddressHBox = getFormTextfield(10, "Supplier Address");
-        Button submitBtn = getSubmitButton();
+    private VBox getOrderView() {
 
-        supplierView.getChildren().add(supplierTitle);
-        supplierView.getChildren().add(supplierNameHBox);
-        supplierView.getChildren().add(supplierAddressHBox);
-        supplierView.getChildren().add(submitBtn);
-        return supplierView;
+        return mainView.getOrderView();
+    }
+
+    private VBox getSupplierView() {
+
+        return mainView.getSupplierView();
     }
 
     private VBox getContractView() {
-        VBox contractView = new VBox(20);
-        contractView.getStyleClass().add("container");
-        Label contractTitle = getTitleLabel("Create Contract", "title");
-        HBox itemNoHBox = getFormTextfield(10, "Item Number");
-        HBox dateOfContractHBox = getFormDatePicker();
-        HBox contractPriceHBox = getFormTextfield(10, "Contract Price");
-        HBox contractAmountHBox = getFormTextfield(10, "Contract Amount");
-        Button submitBtn = getSubmitButton();
 
-        contractView.getChildren().add(contractTitle);
-        contractView.getChildren().add(itemNoHBox);
-        contractView.getChildren().add(dateOfContractHBox);
-        contractView.getChildren().add(contractPriceHBox);
-        contractView.getChildren().add(contractAmountHBox);
-        contractView.getChildren().add(submitBtn);
-        return contractView;
+        return mainView.getContractView();
     }
 
-    private HBox getFormDatePicker() {
-        HBox dateOfContractHBox = new HBox(10);
-        Label label = getTitleLabel("Date of Contract", "subTitle");
-        DatePicker datePicker = new DatePicker();
-        dateOfContractHBox.getChildren().add(label);
-        dateOfContractHBox.getChildren().add(datePicker);
-        return dateOfContractHBox;
+    private HBox getFormDatePicker(String title) {
+        return mainView.getFormDatePicker(title);
     }
 
     private VBox getProjectView() {
-        Label projectTitle = getTitleLabel("Create Project", "title");
-        HBox labelTextfieldHBox = getFormTextfield(10, "Project Data");
-        return getTitleAndDesc(projectTitle, labelTextfieldHBox);
+        return mainView.getProjectView();
     }
 
     private VBox getItemView() {
-        Label itemTitle = getTitleLabel("Create Item", "title");
-        HBox labelTextfieldHBox = getFormTextfield(10, "Item Description");
-        return getTitleAndDesc(itemTitle, labelTextfieldHBox);
+        return mainView.getItemView();
     }
 
     private VBox getTitleAndDesc(Label itemTitle, HBox labelTextfieldHBox) {
-        Button submitBtn = getSubmitButton();
 
-        VBox itemView = new VBox(20);
-        itemView.getStyleClass().add("container");
-        itemView.getChildren().add(itemTitle);
-        itemView.getChildren().add(labelTextfieldHBox);
-        itemView.getChildren().add(submitBtn);
-        return itemView;
+        return mainView.getTitleAndDesc(itemTitle, labelTextfieldHBox);
     }
 
     private Button getSubmitButton() {
-        Button submitBtn = new Button("Submit");
-        submitBtn.getStyleClass().add("pillButton");
-        return submitBtn;
+        return mainView.getSubmitButton();
     }
 
     private Label getTitleLabel(String text, String css) {
-        Label projectTitle = new Label(text);
-        projectTitle.getStyleClass().add(css);
-        return projectTitle;
+        return mainView.getTitleLabel(text, css);
     }
 
     private HBox getFormTextfield(int spacing, String title) {
-        HBox hBox = new HBox(spacing);
-        Label label = getTitleLabel(title, "subTitle");
-        TextField textField = new TextField();
-        hBox.getChildren().add(label);
-        hBox.getChildren().add(textField);
-        return hBox;
+        return mainView.getFormTextfield(spacing, title);
     }
 
 }
