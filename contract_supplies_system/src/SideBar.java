@@ -9,7 +9,7 @@ import java.io.File;
 public abstract class SideBar extends Application {
 
     protected VBox getMenuSidebar(ImageView imageView, Button projectBtn, Button itemBtn, Button contractBtn, Button supplierBtn, Button orderBtn) {
-        VBox sideBar = new VBox(8);
+        VBox sideBar = new VBox(10);
         sideBar.getStyleClass().add("sidebar");
         sideBar.getChildren().add(imageView);
         sideBar.getChildren().add(projectBtn);

@@ -5,9 +5,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class MainView {
+class MainView {
 
-    public MainView() {
+    MainView() {
     }
 
     VBox getOrderView() {
