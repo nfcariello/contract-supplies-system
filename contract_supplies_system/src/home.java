@@ -23,7 +23,7 @@ public class home extends SideBar {
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
 
-        sql_query.insert("Nick","26 Eden Lane");
+        sql_query.insert_suppliers("Nick", "26 Eden Lane");
 
         final BorderPane borderPane = new BorderPane();
         borderPane.getStyleClass().add("body");
