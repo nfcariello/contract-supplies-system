@@ -12,15 +12,18 @@ import java.io.FileNotFoundException;
 
 public class home extends SideBar {
 
-
+    sql sql_query = new sql();
     private final MainView mainView = new MainView();
 
     public static void main(String[] args) {
         launch(args);
     }
 
+
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
+
+        sql_query.insert("Nick","26 Eden Lane");
 
         final BorderPane borderPane = new BorderPane();
         borderPane.getStyleClass().add("body");
