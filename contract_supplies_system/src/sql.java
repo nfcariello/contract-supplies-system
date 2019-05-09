@@ -84,6 +84,7 @@ public class sql {
         return rm;
     }
 
+
     public ResultSet find_order(int project_number, int contract_number) {
         String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
         ResultSet rs;
@@ -97,7 +98,7 @@ public class sql {
         return rs;
     }
 
-
+    // Query 5
     public void new_order(Date date_required, int project_number, int contract_number) {
         String sql = "INSERT INTO Orders(`DATE-REQUIRED`,`PROJECT-NO`,`CONTRACT-NO`) VALUES(?,?,?)";
         ResultSet on;
@@ -118,5 +119,83 @@ public class sql {
             on = null;
 
         }
+    }
+
+    // Query 7
+    // TODO Does this need to have an int of order number as well? Should this be a nested statement?
+    public ResultSet price_of_item_in_order(int item_no) {
+        String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no;
+        ResultSet rm;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rm = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = null;
+        }
+        return rm;
+    }
+
+
+    // Query 8
+    public ResultSet find_orders_for_item(int item_no) {
+        String sql = "SELECT `ORDER-NO` FROM `Made-Of` WHERE `ITEM-NO`=" + item_no;
+        ResultSet rm;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rm = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = null;
+        }
+        return rm;
+    }
+
+
+    // Query 9
+    public ResultSet price_of_item_in_contract(int item_no, int contract_no) {
+        String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no + " AND `CONTRACT-NO`=" + contract_no;
+        ResultSet rm;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rm = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = null;
+        }
+        return rm;
+    }
+
+    //Query 10
+    public ResultSet find_supplier_no_for_contract(int contract_no) {
+        String sql = "SELECT `SUPPLIER-NO` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no;
+        ResultSet rm;
+        ResultSet supplier_info = null;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rm = pstmt.executeQuery();
+
+            while(rm.next()){
+                supplier_info = find_supplier(rm.getInt("SUPPLIER-NO"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return supplier_info;
+    }
+
+    //Query 10 part2
+
+    public ResultSet find_supplier(int supplier_no) {
+        String sql = "SELECT * FROM `Suppliers` WHERE `SUPPLIER-NO`=" + supplier_no;
+        ResultSet rm;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rm = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = null;
+        }
+        return rm;
     }
 }
