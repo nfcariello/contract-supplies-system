@@ -72,7 +72,7 @@ public class sql {
 
     //Query 6
     public ResultSet find_items_in_order(int order_no) {
-        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=order_no";
+        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
         ResultSet rm;
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -84,4 +84,31 @@ public class sql {
         return rm;
     }
 
+    public ResultSet find_order(int project_number, int contract_number) {
+        String sql = "SELECT * FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number
+        ResultSet rs;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            rs = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rs = null;
+        }
+        return rs;
+    }
+
+
+    public void new_order(Date date_required, int project_number, int contract_number) {
+        String sql = "INSERT INTO Orders(`DATE-REQUIRED`,`PROJECT-NO`,`CONTRACT-NO`) VALUES(?,?,?)";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDate(1, date_required);
+            pstmt.setInt(2, project_number);
+            pstmt.setInt(3, contract_number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
