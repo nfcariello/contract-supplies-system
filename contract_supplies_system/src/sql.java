@@ -108,7 +108,7 @@ public class sql {
 
     public void new_order(Date date_required, int project_number, int contract_number, LinkedList<OrderedItem> items) {
         String sql = "INSERT INTO Orders(`DATE-REQUIRED`,`PROJECT-NO`,`CONTRACT-NO`) VALUES(?,?,?)";
-        ResultSet on;
+        int on;
         try {
             Connection conn = this.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -117,8 +117,7 @@ public class sql {
             pstmt.setInt(3, contract_number);
             pstmt.executeUpdate();
 
-            on = find_order(project_number, contract_number);
-
+            on = find_order(project_number, contract_number).getInt(1);
             while (items != null) {
                 OrderedItem current = items.pop();
 
