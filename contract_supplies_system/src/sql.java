@@ -85,7 +85,7 @@ public class sql {
     }
 
     public ResultSet find_order(int project_number, int contract_number) {
-        String sql = "SELECT * FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number
+        String sql = "SELECT * FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
         ResultSet rs;
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
