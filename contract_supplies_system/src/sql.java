@@ -122,7 +122,7 @@ public class sql {
             while (items != null) {
                 OrderedItem current = items.pop();
 
-                String sql2 = "INSERT INTO Made-Of(`ORDER-NO`,`ITEM-NO`,`ORDER-QTY`) VALUES(?,?,?)";
+                String sql2 = "INSERT INTO `Made-Of`(`ORDER-NO`,`ITEM-NO`,`ORDER-QTY`) VALUES(?,?,?)";
                 PreparedStatement pstmt2 = conn.prepareStatement(sql2);
                 pstmt2.setInt(1, on);
                 pstmt2.setInt(2, current.getItemNo());
@@ -189,7 +189,7 @@ public class sql {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             rm = pstmt.executeQuery();
 
-            while(rm.next()){
+            while (rm.next()) {
                 supplier_info = find_supplier(rm.getInt("SUPPLIER-NO"));
             }
         } catch (SQLException e) {
