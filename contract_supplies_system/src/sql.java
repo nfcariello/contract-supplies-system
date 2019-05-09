@@ -1,3 +1,4 @@
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.List;
 
@@ -70,16 +71,17 @@ public class sql {
     }
 
     //Query 6
-    public void find_items_in_order(int order_no) {
-        String sql = "SELECT `ITEM-NO` FROM Made-Of WHERE ORDER-NO=order_no";
-        List rm;
+    public ResultSet find_items_in_order(int order_no) {
+        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=order_no";
+        ResultSet rm;
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, order_no);
-            rm = pstmt.executeUpdate();
+            rm = pstmt.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            rm = null;
         }
+        return rm;
     }
 
 }
