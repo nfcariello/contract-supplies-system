@@ -213,7 +213,7 @@ class MainView {
 
         Button submitBtn = getSubmitButton();
 
-        Platform.runLater(() -> submitBtn.setOnAction(event -> {
+        submitBtn.setOnAction(event -> {
             LocalDate dateRequired = dPDateRequired.getValue();
             int projectNumber = Integer.parseInt(tfProjectNumber.getText());
             int contractNumber = Integer.parseInt(tfContractNumber.getText());
@@ -225,7 +225,7 @@ class MainView {
             orderedItemTableView.getItems().clear();
             tfProjectNumber.setText("");
             tfContractNumber.setText("");
-        }));
+        });
 
         orderView.getChildren().addAll(borderPane, submitBtn);
         return orderView;

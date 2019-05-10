@@ -11,6 +11,7 @@ public class sql {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -54,7 +55,7 @@ public class sql {
             Connection conn = this.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, projectData);
-            pstmt.executeUpdate();
+            pstmt.execute();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -206,5 +207,40 @@ public class sql {
             rm = null;
         }
         return rm;
+    }
+
+
+    //Query 11
+    public int find_quantity_left(int item_no, int contract_no) {
+        String sql = "SELECT `CONTRACT-AMOUNT` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no + "AND `ITEM-NO`= " + item_no;
+        ResultSet contract_amount;
+        int contract_amt;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            contract_amount = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            contract_amount = null;
+        }
+
+        contract_amt = contract_amount.getInt(1);
+
+        String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE `ORDER-NO` AND `ITEM-NO` IN (" +
+                "SELECT * FROM Orders WHERE `CONTRACT-NO`=" + contract_no;
+        ResultSet sum_quantity;
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            sum_quantity = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            sum_quantity = null;
+        }
+
+        int sum_qty = sum_quantity.getInt(1);
+
+        return contract_amt - sum_qty;
+
+
     }
 }
