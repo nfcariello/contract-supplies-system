@@ -232,7 +232,7 @@ public class sql {
             contract_amt = 0;
         }
 
-        String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE `ORDER-NO` AND `ITEM-NO` IN (" +
+        String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE (`ORDER-NO`, `ITEM-NO`) IN (" +
                 "SELECT * FROM Orders WHERE `CONTRACT-NO`=" + contract_no;
         ResultSet sum_quantity;
 
@@ -255,4 +255,39 @@ public class sql {
 
 
     }
+
+    public ResultSet summerize_purchases() {
+
+        String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', `Made-Of`";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String sql2 = "ALTER TABLE `Temp_table` DROP `ORDER-NO`";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+            pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String sql3 = "SELECT `CONTRACT-NO`, `ITEM-NO`, SUM(`ORDER-QTY`) FROM `Temp_table` GROUP BY `CONTRACT-NO`, `ORDER-NO`";
+        ResultSet rm;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql3)) {
+            rm = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = null;
+        }
+
+        return rm;
+
+    }
+
 }
