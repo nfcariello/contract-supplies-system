@@ -77,33 +77,8 @@ public class sql {
         }
     }
 
-    //Query 6
-    public ResultSet find_items_in_order(int order_no) {
-        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
-        return getResultSet(sql);
-    }
-
-
-    public ResultSet find_order(int project_number, int contract_number) {
-        String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
-        return getResultSet(sql);
-    }
-
-    private ResultSet getResultSet(String sql) {
-        ResultSet rs;
-        try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rs = null;
-        }
-        return rs;
-    }
-
-
-    public void new_order(Date date_required, int project_number, int contract_number, LinkedList<OrderedItem> items) {
+    // Query 5
+    public void insert_order(Date date_required, int project_number, int contract_number, LinkedList<OrderedItem> items) {
         String sql = "INSERT INTO Orders(`DATE-REQUIRED`,`PROJECT-NO`,`CONTRACT-NO`) VALUES(?,?,?)";
         int on;
         try {
@@ -129,6 +104,31 @@ public class sql {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    //Query 6
+    public ResultSet find_items_in_order(int order_no) {
+        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
+        return getResultSet(sql);
+    }
+
+
+    public ResultSet find_order(int project_number, int contract_number) {
+        String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
+        return getResultSet(sql);
+    }
+
+    private ResultSet getResultSet(String sql) {
+        ResultSet rs;
+        try {
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rs = null;
+        }
+        return rs;
     }
 
     // Query 7
