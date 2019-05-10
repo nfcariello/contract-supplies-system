@@ -4,8 +4,8 @@ import static java.sql.Types.NULL;
 
 public class OrderedItem {
 
-    int itemNo;
-    int orderQty;
+    private int itemNo;
+    private int orderQty;
 
 
     public OrderedItem() {
