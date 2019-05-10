@@ -215,6 +215,8 @@ public class sql {
         String sql = "SELECT `CONTRACT-AMOUNT` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no + "AND `ITEM-NO`= " + item_no;
         ResultSet contract_amount;
         int contract_amt;
+        int sum_qty;
+
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             contract_amount = pstmt.executeQuery();
@@ -223,7 +225,12 @@ public class sql {
             contract_amount = null;
         }
 
-        contract_amt = contract_amount.getInt(1);
+        try {
+            contract_amt = contract_amount.getInt(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            contract_amt = 0;
+        }
 
         String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE `ORDER-NO` AND `ITEM-NO` IN (" +
                 "SELECT * FROM Orders WHERE `CONTRACT-NO`=" + contract_no;
@@ -237,7 +244,12 @@ public class sql {
             sum_quantity = null;
         }
 
-        int sum_qty = sum_quantity.getInt(1);
+        try {
+            sum_qty = sum_quantity.getInt(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            sum_qty = 0;
+        }
 
         return contract_amt - sum_qty;
 
