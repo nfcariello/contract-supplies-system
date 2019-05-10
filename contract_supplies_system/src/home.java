@@ -8,8 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
-
 public class home extends SideBar {
 
     private final MainView mainView = new MainView();
@@ -21,9 +19,7 @@ public class home extends SideBar {
 
 
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
-
-        sql_query.insert_suppliers("Nick", "26 Eden Lane");
+    public void start(Stage primaryStage) {
 
         final BorderPane borderPane = new BorderPane();
         borderPane.getStyleClass().add("body");
@@ -36,9 +32,9 @@ public class home extends SideBar {
         Button supplierBtn = getMenuButton("Supplier");
         Button orderBtn = getMenuButton("Order");
 
-        VBox sideBar = getMenuSidebar(imageView, projectBtn, itemBtn, contractBtn, supplierBtn, orderBtn);
+        HBox topBar = getMenuSidebar(imageView, projectBtn, itemBtn, contractBtn, supplierBtn, orderBtn);
 
-        borderPane.setLeft(sideBar);
+        borderPane.setTop(topBar);
 
 //        Project View
         VBox projectView = mainView.getProjectView();
@@ -118,8 +114,9 @@ public class home extends SideBar {
     }
 
     private VBox getTitleAndDesc(Label itemTitle, HBox labelTextfieldHBox) {
+        Button submitBtn = getSubmitButton();
 
-        return mainView.getTitleAndDesc(itemTitle, labelTextfieldHBox);
+        return mainView.getTitleAndDesc(itemTitle, labelTextfieldHBox, submitBtn);
     }
 
     private Button getSubmitButton() {

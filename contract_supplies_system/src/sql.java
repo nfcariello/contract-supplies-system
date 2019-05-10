@@ -1,6 +1,5 @@
 import source.OrderedItem;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.LinkedList;
 
@@ -8,7 +7,7 @@ public class sql {
 
 
     private Connection connect() {
-        String url = "jdbc:sqlite:contract_supplies_system/src/db.sqlite";
+        String url = "jdbc:sqlite:db.SQLite";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -62,6 +61,8 @@ public class sql {
     }
 
     //Query 4
+    // TODO: UI - Item Number, Date of Contract, Contract Price, Contract Amount
+//     TODO: SQL - Supplier Number, Date of Contract
     public void insert_contracts(int supplier_number, Date contract_date) {
         String sql = "INSERT INTO CONTRACTS(`SUPPLIER-NO`,`DATE-OF-CONTRACT`) VALUES(?,?)";
 
@@ -76,38 +77,8 @@ public class sql {
         }
     }
 
-    //Query 6
-    public ResultSet find_items_in_order(int order_no) {
-        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
-        ResultSet rm;
-        try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            rm = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rm = null;
-        }
-        return rm;
-    }
-
-
-    public ResultSet find_order(int project_number, int contract_number) {
-        String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
-        ResultSet rs;
-        try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rs = null;
-        }
-        return rs;
-    }
-
-
-    public void new_order(Date date_required, int project_number, int contract_number, LinkedList<OrderedItem> items) {
+    // Query 5
+    public void insert_order(Date date_required, int project_number, int contract_number, LinkedList<OrderedItem> items) {
         String sql = "INSERT INTO Orders(`DATE-REQUIRED`,`PROJECT-NO`,`CONTRACT-NO`) VALUES(?,?,?)";
         int on;
         try {
@@ -135,10 +106,35 @@ public class sql {
         }
     }
 
+    //Query 6
+    public ResultSet find_items_in_order(int order_no) {
+        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
+        return getResultSet(sql);
+    }
+
+
+    public ResultSet find_order(int project_number, int contract_number) {
+        String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
+        return getResultSet(sql);
+    }
+
+    private ResultSet getResultSet(String sql) {
+        ResultSet rs;
+        try {
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rs = null;
+        }
+        return rs;
+    }
+
     // Query 7
-    // TODO Does this need to have an int of order number as well? Should this be a nested statement?
-    public ResultSet price_of_item_in_order(int item_no) {
-        String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no;
+    public ResultSet price_of_item_in_order(int item_no, int contract_no) {
+        String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no +
+                " AND `CONTRACT-NO`= " + contract_no;
         ResultSet rm;
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -199,7 +195,6 @@ public class sql {
     }
 
     //Query 10 part2
-
     public ResultSet find_supplier(int supplier_no) {
         String sql = "SELECT * FROM `Suppliers` WHERE `SUPPLIER-NO`=" + supplier_no;
         ResultSet rm;
