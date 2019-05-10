@@ -29,7 +29,7 @@ public abstract class SideBar extends Application {
         imageView.setSmooth(true);
         imageView.setCache(true);
         imageView.setImage(image);
-        imageView.setFitWidth(150);
+        imageView.setFitWidth(200);
         return imageView;
     }
 
