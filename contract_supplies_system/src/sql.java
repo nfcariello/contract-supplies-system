@@ -261,21 +261,13 @@ public class sql {
 
 
     //Query 11
-    // TODO - `CONTRACT-AMOUNT` doesn't exist in 'CONTRACTS' ??
     public int find_quantity_left(int item_no, int contract_no) {
-        String sql = "SELECT `CONTRACT-AMOUNT` FROM 'CONTRACTS' WHERE `CONTRACT-NO`=" + contract_no + "AND `ITEM-NO`= " + item_no;
+        String sql = "SELECT `CONTRACT-AMOUNT` FROM 'To-Supply' WHERE `CONTRACT-NO`=" + contract_no + " AND `ITEM-NO`= " + item_no;
         ResultSet contract_amount;
         int contract_amt;
         int sum_qty;
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            contract_amount = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            contract_amount = null;
-        }
-
+        contract_amount = getResultSet(sql);
         try {
             contract_amt = contract_amount.getInt(1);
         } catch (SQLException e) {
@@ -283,9 +275,9 @@ public class sql {
             contract_amt = 0;
         }
 
-        String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE (`ORDER-NO`, `ITEM-NO`) IN (" +
-                "SELECT * FROM Orders WHERE `CONTRACT-NO`=" + contract_no;
+        String s = "SELECT SUM(`ORDER-QTY`) FROM 'Made-Of' WHERE (SELECT `ORDER-NO` FROM Orders WHERE 'CONTRACT-NO'=" + contract_no + ") AND 'ITEM-NO'=" + item_no;
         ResultSet sum_quantity = getResultSet(s);
+        System.out.println("ResultSet: " + sum_quantity + "Contract Number: " + contract_no + " ItemNo: " + item_no);
 
         try {
             sum_qty = sum_quantity.getInt(1);
@@ -295,8 +287,6 @@ public class sql {
         }
 
         return contract_amt - sum_qty;
-
-
     }
 
     public LinkedList<SummarizedPurchase> summerize_purchases() {

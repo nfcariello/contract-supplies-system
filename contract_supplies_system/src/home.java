@@ -1,8 +1,5 @@
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -43,7 +40,8 @@ public class home extends SideBar {
         MenuItem createContract = getMenuItem("Create Contract");
         MenuItem priceOfItemContract = getMenuItem("Price Of Item");
         MenuItem findSupplierNumber = getMenuItem("Find Supplier Number");
-        contractBtn.getItems().addAll(createContract, priceOfItemContract, findSupplierNumber);
+        MenuItem findQualityLeft = getMenuItem("Find Quantity Left");
+        contractBtn.getItems().addAll(createContract, priceOfItemContract, findSupplierNumber, findQualityLeft);
 
         /**
          * Order
@@ -71,6 +69,7 @@ public class home extends SideBar {
         VBox mainContractView = contractView.getContractView();
         VBox contractPriceOfItem = contractView.getPriceOfItemContract();
         VBox findSupplier = contractView.getFindSupplier();
+        VBox findQuantity = contractView.getFindQuantityLeftContract();
 
 //        Supplier View
         VBox supplierView = viewUtils.getSupplierView();
@@ -117,6 +116,9 @@ public class home extends SideBar {
         });
         findSupplierNumber.setOnAction(value -> {
             borderPane.setCenter(findSupplier);
+        });
+        findQualityLeft.setOnAction(value -> {
+            borderPane.setCenter(findQuantity);
         });
 
         /**

@@ -179,4 +179,61 @@ public class ContractView {
 
         return priceOfItemView;
     }
+
+    /**
+     * Get Find Quantity Left
+     * */
+    VBox getFindQuantityLeftContract() {
+        //        Find View
+        VBox findQuantityLeftView = new VBox(10);
+        findQuantityLeftView.getStyleClass().add("container");
+
+        Label findItemTitle = viewUtils.getTitleLabel("Find Quantity Left", "title");
+
+        HBox searchHbox = new HBox(20);
+        searchHbox.setAlignment(Pos.CENTER);
+
+        Label itemNumberLabel = new Label("Item Number: ");
+        itemNumberLabel.setFont(Font.font("Helvetica", FontWeight.MEDIUM, 18));
+
+        /* Item Number Textfield */
+        TextField itemNoTextField = new TextField();
+        HBox.setHgrow(itemNoTextField, Priority.ALWAYS);
+
+        Label contactNumberLabel = new Label("Contract Number: ");
+        contactNumberLabel.setFont(Font.font("Helvetica", FontWeight.MEDIUM, 18));
+
+        /* Item Number Textfield */
+        TextField contactNumberTextField = new TextField();
+        HBox.setHgrow(contactNumberTextField, Priority.ALWAYS);
+
+        /* Search Button */
+        Button searchButton = new Button("Find");
+        searchButton.getStyleClass().add("searchButton");
+        searchButton.setPadding(new Insets(0, 10, 0, 10));
+        searchHbox.getChildren().addAll(itemNumberLabel, itemNoTextField, contactNumberLabel, contactNumberTextField, searchButton);
+
+        /* Results */
+        Label resultTitle = new Label("Result");
+        resultTitle.setFont(Font.font("Helvetica", FontWeight.SEMI_BOLD, 24));
+        resultTitle.setPadding(new Insets(50, 0, 0, 00));
+        Label resultLabel = new Label("NaN");
+        resultLabel.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 32));
+
+        findQuantityLeftView.getChildren().addAll(findItemTitle, searchHbox, resultTitle, resultLabel);
+
+        searchButton.setOnAction(event -> {
+
+            int itemNumber = Integer.parseInt(itemNoTextField.getText());
+            int contractNumber = Integer.parseInt(contactNumberTextField.getText());
+
+            double result = sql_query.find_quantity_left(itemNumber, contractNumber);
+            resultLabel.setText(String.valueOf(result));
+
+            itemNoTextField.setText("");
+            contactNumberTextField.setText("");
+        });
+
+        return findQuantityLeftView;
+    }
 }
