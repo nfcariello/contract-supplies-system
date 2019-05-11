@@ -30,14 +30,14 @@ class ViewUtils extends sql {
 
         TableColumn<String, SummarizedPurchase> itemNumberColumn = new TableColumn<>("Item Number");
         itemNumberColumn.prefWidthProperty().bind(summarizePurchasesTableView.widthProperty().multiply(0.3));
-        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<>("contract_no"));
+        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<>("item_no"));
 
         TableColumn<String, SummarizedPurchase> orderQuantityColumn = new TableColumn<>("Order Quantity");
         orderQuantityColumn.prefWidthProperty().bind(summarizePurchasesTableView.widthProperty().multiply(0.3));
-        orderQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("contract_no"));
+        orderQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("order_qty"));
 
         summarizePurchasesTableView.getColumns().addAll(contractNumberColumn, itemNumberColumn, orderQuantityColumn);
-        summarizePurchasesTableView.setPrefSize(600, 200);
+        summarizePurchasesTableView.setPrefSize(600, 300);
 
         summarizePurchasesVBox.getChildren().addAll(summarizePurchases, summarizePurchasesTableView);
 
