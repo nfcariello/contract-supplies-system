@@ -291,81 +291,39 @@ public class sql {
 
 
     public LinkedList<SummarizedPurchase> summerizePurchaseMike() {
-        {
-
-            String createTemp = "CREATE TABLE `Temp_table` (`CONTRACT-NO` int(6), `ORDER-NO` int(6), `ITEM-NO` int(6),`ORDER-QTY` int(6))";
-            try (Connection conn = this.connect();
-                 PreparedStatement pstmt = conn.prepareStatement(createTemp)) {
-                pstmt.execute();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
 
 
-            String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', 'Made-Of'";
-
-            try (Connection conn = this.connect();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.executeQuery();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-
-            String sql2 = "ALTER TABLE `Temp_table` DROP `ORDER-NO`";
-
-            try (Connection conn = this.connect();
-                 PreparedStatement pstmt = conn.prepareStatement(sql2)) {
-                pstmt.executeQuery();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-            String sql3 = "SELECT `CONTRACT-NO`, `ITEM-NO`, SUM(`ORDER-QTY`) FROM `Temp_table` GROUP BY `CONTRACT-NO`, `ORDER-NO`";
-            ResultSet rs = getResultSet(sql3);
-            LinkedList<SummarizedPurchase> rm = new LinkedList<>();
-            try {
-                while (rs.next())
-                    rm.add(new SummarizedPurchase(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-            String dropTemp = "DROP TABLE `Temp_table`";
-            try (Connection conn = this.connect();
-                 PreparedStatement pstmt = conn.prepareStatement(dropTemp)) {
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
+//        String createTemp = "CREATE TABLE `Temp_table` (`CONTRACT-NO` int(6), `ITEM-NO` int(6),`ORDER-QTY` int(6))";
+//        try (Connection conn = this.connect();
+//             PreparedStatement pstmt = conn.prepareStatement(createTemp)) {
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        System.out.println("Created Table");
 
 
-            return rm;
+//        String sql = "INSERT INTO `Temp_table` SELECT `CONTRACT-NO`, `ITEM-NO`, `ORDER-QTY` FROM 'Orders', 'Made-Of' WHERE `Made-Of`.`ORDER-NO` = Orders.`ORDER-NO`";
+//
+//        try (Connection conn = this.connect();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.executeQuery();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
 
-        }
-    }
-    public LinkedList<SummarizedPurchase> summerize_purchases() {
 
-        String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', `Made-Of`";
+//        String sql2 = "ALTER TABLE `Temp_table` DROP `ORDER-NO`";
+//
+//        try (Connection conn = this.connect();
+//             PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+//            pstmt.executeQuery();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        String sql2 = "ALTER TABLE `Temp_table` DROP `ORDER-NO`";
-
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql2)) {
-            pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        String sql3 = "SELECT `CONTRACT-NO`, `ITEM-NO`, SUM(`ORDER-QTY`) FROM `Temp_table` GROUP BY `CONTRACT-NO`, `ORDER-NO`";
+        String sql3 = "SELECT `CONTRACT-NO`, `ITEM-NO`, `ORDER-QTY` FROM `Temp_table` GROUP BY `CONTRACT-NO`";
         ResultSet rs = getResultSet(sql3);
         LinkedList<SummarizedPurchase> rm = new LinkedList<>();
         try {
@@ -376,8 +334,16 @@ public class sql {
             System.out.println(e.getMessage());
         }
 
+//        String dropTemp = "DROP TABLE `Temp_table`";
+//        try (Connection conn = this.connect();
+//             PreparedStatement pstmt = conn.prepareStatement(dropTemp)) {
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+
+
         return rm;
 
     }
-
 }
