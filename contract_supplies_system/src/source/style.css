@@ -4,8 +4,8 @@
 
 .menuButton {
     -fx-font-family: Helvetica;
-    -fx-text-fill: black;
-    -fx-background-color: #ddd;
+    -fx-text-fill: white;
+    -fx-background-color: #1A1A1C;
     -fx-border: none;
     -fx-color: black;
     -fx-font-size: 16px;
@@ -23,7 +23,59 @@
 }
 
 .menuButton:hover {
-    -fx-background-color: #f1f1f1;
+    -fx-text-fill: #4093B7;
+}
+
+.dropdownButton {
+    -fx-font-family: Helvetica;
+    -fx-text-fill: black;
+    -fx-background-color: #1A1A1C;
+    -fx-border: none;
+    -fx-color: black;
+    -fx-font-size: 16px;
+    -fx-start-margin: 20;
+    -fx-end-margin: 20;
+    -fx-pref-height: 60;
+    -fx-pref-width: 130;
+    -fx-padding: 10px 20px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-display: inline-block;
+    -fx-margin: 4px 2px;
+    -fx-cursor: pointer;
+    -fx-border-radius: 16px;
+}
+
+.dropdownButton:hover {
+    -fx-text-fill: #4093B7;
+}
+
+.menu-item {
+    -fx-font-family: Helvetica;
+    -fx-text-fill: white;
+    -fx-background-color: #1A1A1C;
+    -fx-border: none;
+    -fx-color: #1A1A1C;
+    -fx-font-size: 16px;
+    -fx-start-margin: 20;
+    -fx-end-margin: 20;
+    -fx-pref-height: 60;
+    -fx-pref-width: 120;
+    -fx-padding: 10px 20px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-display: inline-block;
+    -fx-margin: 4px 2px;
+    -fx-cursor: pointer;
+    -fx-border-radius: 16px;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.menu-item:hover .label {
+    -fx-text-fill: #4093B7;
 }
 
 .sidebar {
@@ -91,4 +143,27 @@
     -fx-letter-spacing: 0.6px;
     -fx-text-align: center;
     -fx-color: #3f3f3f;
+}
+
+.descriptionHeader {
+    -fx-font-family: Helvetica;
+    -fx-font-size: 16px;
+    -fx-text-fill: black;
+    /*-fx-pref-height: 50;*/
+    -fx-letter-spacing: 7px;
+}
+
+.searchButton {
+    -fx-background-color: #1A1A1C;
+    -fx-font-family: Helvetica;
+    -fx-font-size: 16px;
+    -fx-start-margin: 20;
+    -fx-end-margin: 20;
+    -fx-pref-height: 40;
+    -fx-pref-width: 120;
+    -fx-text-fill: #F9F8F8;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-letter-spacing: 0;
+    -fx-border-insets: 20px 0 0 20px;
 }

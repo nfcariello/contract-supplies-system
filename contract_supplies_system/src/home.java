@@ -1,11 +1,15 @@
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class home extends SideBar {
@@ -30,7 +34,12 @@ public class home extends SideBar {
         Button itemBtn = getMenuButton("Item");
         Button contractBtn = getMenuButton("Contract");
         Button supplierBtn = getMenuButton("Supplier");
-        Button orderBtn = getMenuButton("Order");
+
+//       Order
+        MenuButton orderBtn = getDropdownMenuButton("Order");
+        MenuItem createOrderItem = getMenuItem("Create Order");
+        MenuItem findItemsItem = getMenuItem("Find Items");
+        orderBtn.getItems().addAll(createOrderItem, findItemsItem);
 
         HBox topBar = getMenuSidebar(imageView, projectBtn, itemBtn, contractBtn, supplierBtn, orderBtn);
 
@@ -51,17 +60,47 @@ public class home extends SideBar {
 //        Order View
         VBox orderView = mainView.getOrderView();
 
+//        Find View
+        VBox findItemView = new VBox(20);
+        findItemsItem.getStyleClass().add("container");
+
+        Label findItemTitle = getTitleLabel("Find Items in Order", "title");
+
+        HBox searchHbox = new HBox(20);
+        searchHbox.setAlignment(Pos.CENTER);
+        searchHbox.setPadding(new Insets(0, 20, 0, 20));
+
+        Label searchLabel = new Label("Search: ");
+        searchLabel.setFont(Font.font("Helvetica", FontWeight.MEDIUM, 25));
+
+        /* Search Textfield */
+        TextField searchField = new TextField();
+        HBox.setHgrow(searchField, Priority.ALWAYS);
+
+        /* Search Button */
+        Button searchButton = new Button("Search");
+        searchButton.getStyleClass().add("searchButton");
+        searchButton.setPadding(new Insets(0, 10, 0, 10));
+        searchHbox.getChildren().addAll(searchLabel, searchField, searchButton);
+
+        findItemView.getChildren().addAll(findItemTitle, searchHbox);
+
 //        Main
-        borderPane.setCenter(projectView);
+        borderPane.setCenter(findItemView);
+
+        //        Supplier Button
+        supplierBtn.setOnAction(value -> {
+            borderPane.setCenter(supplierView);
+        });
+
+        //        Item Button
+        itemBtn.setOnAction(value -> {
+            borderPane.setCenter(itemView);
+        });
 
 //        Project Button
         projectBtn.setOnAction(value -> {
             borderPane.setCenter(projectView);
-        });
-
-//        Item Button
-        itemBtn.setOnAction(value -> {
-            borderPane.setCenter(itemView);
         });
 
 //        Contract Button
@@ -69,14 +108,10 @@ public class home extends SideBar {
             borderPane.setCenter(contractView);
         });
 
-//        Supplier Button
-        supplierBtn.setOnAction(value -> {
-            borderPane.setCenter(supplierView);
-        });
-
 //        Order Button
-        orderBtn.setOnAction(value -> {
-            borderPane.setCenter(orderView);
+        createOrderItem.setOnAction(event -> borderPane.setCenter(orderView));
+        findItemsItem.setOnAction(value -> {
+            borderPane.setCenter(findItemView);
         });
 
         primaryStage.setTitle("Turner Construction System | Contract-Supplies System");
