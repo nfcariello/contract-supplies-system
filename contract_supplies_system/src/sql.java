@@ -1,3 +1,4 @@
+import source.ContractedItem;
 import source.OrderedItem;
 
 import java.sql.*;
@@ -55,7 +56,7 @@ public class sql {
             Connection conn = this.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, projectData);
-            pstmt.execute();
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -64,7 +65,7 @@ public class sql {
     //Query 4
     // TODO: UI - Item Number, Date of Contract, Contract Price, Contract Amount
 //     TODO: SQL - Supplier Number, Date of Contract
-    public void insert_contracts(int supplier_number, Date contract_date) {
+    public void insert_contracts(int supplier_number, Date contract_date, LinkedList<ContractedItem> itemList) {
         String sql = "INSERT INTO CONTRACTS(`SUPPLIER-NO`,`DATE-OF-CONTRACT`) VALUES(?,?)";
 
         try {
@@ -75,6 +76,36 @@ public class sql {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+
+        // GET CONTRACT NUMBER THAT WAS JUST MADE
+        int contract_no;
+        ResultSet temp;
+        String sql3 = "SELECT last_insert_rowid()";
+        try {
+            Connection conn = this.connect();
+            PreparedStatement ps = conn.prepareStatement(sql3);
+            temp = ps.executeQuery();
+            contract_no = temp.getInt(1);
+        } catch (SQLException e) {
+            contract_no = 0;
+        }
+
+        for (ContractedItem x : itemList) {
+            String sql2 = "INSERT INTO `To-Supply` (`CONTRACT-NO`, `ITEM-NO`, `CONTRACT-AMOUNT`, `CONTRACT-PRICE`) " +
+                    "VALUES(?,?,?,?)";
+
+            try {
+                Connection conn = this.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql2);
+                pstmt.setInt(1, contract_no);
+                pstmt.setInt(2, x.getItemNo());
+                pstmt.setInt(3, x.getAmount());
+                pstmt.setDouble(4, x.getPrice());
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -117,19 +148,6 @@ public class sql {
     public ResultSet find_order(int project_number, int contract_number) {
         String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
         return getResultSet(sql);
-    }
-
-    private ResultSet getResultSet(String sql) {
-        ResultSet rs;
-        try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rs = null;
-        }
-        return rs;
     }
 
     // Query 7
@@ -290,4 +308,20 @@ public class sql {
 
     }
 
+    private ResultSet getResultSet(String sql) {
+        ResultSet rs;
+        try {
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rs = null;
+        }
+        return rs;
+    }
+
+    private void sendInsertQuery(String sql) {
+
+    }
 }
