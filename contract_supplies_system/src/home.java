@@ -56,6 +56,9 @@ public class home extends SideBar {
 
         borderPane.setTop(topBar);
 
+//        Main View
+        VBox summarizePurchases = viewUtils.getSummarizePurchases();
+
 //        Project View
         VBox projectView = viewUtils.getProjectView();
 
@@ -83,7 +86,7 @@ public class home extends SideBar {
 /**
  * Main View
  * */
-        borderPane.setCenter(supplierView);
+        borderPane.setCenter(summarizePurchases);
 
         //        Supplier Button
         supplierBtn.setOnAction(value -> {

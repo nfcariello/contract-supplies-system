@@ -88,7 +88,7 @@ class ItemView extends ViewUtils {
 
                 findOrderTableView.getItems().add(new Order(itemNumber));
             }
-//            orderedItemTableView.getItems().add(new OrderedItem(itemNumber, orderQuantity));
+
             searchField.setText("");
         });
 

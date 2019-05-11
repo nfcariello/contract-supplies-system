@@ -290,19 +290,19 @@ public class sql {
     }
 
 
-    public LinkedList<SummarizedPurchase> summerize_purchase_mike() {
+    public LinkedList<SummarizedPurchase> summerizePurchaseMike() {
         {
 
             String createTemp = "CREATE TABLE `Temp_table` (`CONTRACT-NO` int(6), `ORDER-NO` int(6), `ITEM-NO` int(6),`ORDER-QTY` int(6))";
             try (Connection conn = this.connect();
                  PreparedStatement pstmt = conn.prepareStatement(createTemp)) {
-                pstmt.executeUpdate();
+                pstmt.execute();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
 
 
-            String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', `Made-Of`";
+            String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', 'Made-Of'";
 
             try (Connection conn = this.connect();
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {

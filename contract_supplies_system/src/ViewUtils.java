@@ -1,14 +1,58 @@
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import source.SummarizedPurchase;
+
+import java.util.LinkedList;
 
 class ViewUtils extends sql {
 
 //    private sql sql_query = new sql();
 
     ViewUtils() {
+    }
+
+    VBox getSummarizePurchases() {
+        VBox summarizePurchasesVBox = new VBox(10);
+        summarizePurchasesVBox.getStyleClass().add("container");
+
+        Label summarizePurchases = getTitleLabel("Purchases", "title");
+
+        /* Table View */
+        /* Table View */
+        TableView summarizePurchasesTableView = new TableView();
+
+//        Item Number
+        TableColumn<String, SummarizedPurchase> contractNumberColumn = new TableColumn<>("Contract Number");
+        contractNumberColumn.prefWidthProperty().bind(summarizePurchasesTableView.widthProperty().multiply(0.3));
+        contractNumberColumn.setCellValueFactory(new PropertyValueFactory<>("contract_no"));
+
+        TableColumn<String, SummarizedPurchase> itemNumberColumn = new TableColumn<>("Item Number");
+        itemNumberColumn.prefWidthProperty().bind(summarizePurchasesTableView.widthProperty().multiply(0.3));
+        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<>("contract_no"));
+
+        TableColumn<String, SummarizedPurchase> orderQuantityColumn = new TableColumn<>("Order Quantity");
+        orderQuantityColumn.prefWidthProperty().bind(summarizePurchasesTableView.widthProperty().multiply(0.3));
+        orderQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("contract_no"));
+
+        summarizePurchasesTableView.getColumns().addAll(contractNumberColumn, itemNumberColumn, orderQuantityColumn);
+        summarizePurchasesTableView.setPrefSize(600, 200);
+
+        summarizePurchasesVBox.getChildren().addAll(summarizePurchases, summarizePurchasesTableView);
+
+        LinkedList<SummarizedPurchase> summarizedPurchasesList = summerizePurchaseMike();
+        summarizePurchasesTableView.getItems().clear();
+        for (int i = 0; i < summarizedPurchasesList.size(); i++) {
+            int contractNumber = summarizedPurchasesList.get(i).getContract_no();
+            int itemNumber = summarizedPurchasesList.get(i).getItem_no();
+            int orderQuantity = summarizedPurchasesList.get(i).getOrder_qty();
+
+            summarizePurchasesTableView.getItems().add(new SummarizedPurchase(contractNumber, itemNumber, orderQuantity));
+        }
+
+
+        return summarizePurchasesVBox;
     }
 
     /**
