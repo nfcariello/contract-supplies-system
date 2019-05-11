@@ -1,5 +1,5 @@
-import source.ContractedItem;
-import source.OrderedItem;
+import source.*;
+import sun.awt.image.ImageWatched;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -17,6 +17,19 @@ public class sql {
             System.out.println(e.getMessage());
         }
         return conn;
+    }
+
+    private ResultSet getResultSet(String sql) {
+        ResultSet rs1;
+        try {
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            rs1 = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rs1 = null;
+        }
+        return rs1;
     }
 
     //Query 1
@@ -121,7 +134,8 @@ public class sql {
             pstmt.setInt(3, contract_number);
             pstmt.executeUpdate();
 
-            on = find_order(project_number, contract_number).getInt(1);
+            on = find_order(project_number, contract_number);
+
             while (items != null) {
                 OrderedItem current = items.pop();
 
@@ -139,91 +153,110 @@ public class sql {
     }
 
     //Query 6
-    public ResultSet find_items_in_order(int order_no) {
-        String sql = "SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
-        return getResultSet(sql);
+    //WILL RETURN LINKED LIST OF ITEM CLASS WITH NUMBER AND DESCRIPTION
+    public LinkedList<Item> find_items_in_order(int order_no) {
+        String sql = "SELECT `ITEM-NO`, `ITEM-DESCRIPTION` FROM Items WHERE `ITEM-NO` IN ( " +
+                " SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
+        //Not sure why its not allowing closing parentheses
+        ResultSet rs = getResultSet(sql);
+        LinkedList<Item> items = new LinkedList<>();
+        try {
+            while (rs.next()) {
+                items.add(new Item(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            items = null;
+        }
+
+        return items;
     }
 
 
-    public ResultSet find_order(int project_number, int contract_number) {
+    public int find_order(int project_number, int contract_number) {
         String sql = "SELECT `ORDER-NO` FROM Orders WHERE `PROJECT-NO`=" + project_number + " AND `CONTRACT-NO`=" + contract_number;
-        return getResultSet(sql);
+        ResultSet rs = getResultSet(sql);
+        int rm;
+        try {
+            rm = rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            rm = 0;
+        }
+
+        return rm;
     }
 
     // Query 7
-    public ResultSet price_of_item_in_order(int item_no, int contract_no) {
+    public double price_of_item_in_order(int item_no, int contract_no) {
         String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no +
                 " AND `CONTRACT-NO`= " + contract_no;
-        ResultSet rm;
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            rm = pstmt.executeQuery();
+        ResultSet rs = getResultSet(sql);
+        double rm;
+        try {
+            rm = rs.getDouble(1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            rm = null;
+            rm = 0;
         }
+
         return rm;
     }
 
 
     // Query 8
-    public ResultSet find_orders_for_item(int item_no) {
+    public LinkedList<Integer> find_orders_for_item(int item_no) {
         String sql = "SELECT `ORDER-NO` FROM `Made-Of` WHERE `ITEM-NO`=" + item_no;
-        ResultSet rm;
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            rm = pstmt.executeQuery();
+        ResultSet rs = getResultSet(sql);
+        LinkedList<Integer> order_nums = new LinkedList<>();
+        try {
+            while (rs.next()) {
+                order_nums.add(rs.getInt(1));
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            rm = null;
         }
-        return rm;
+        return order_nums;
     }
 
 
     // Query 9
-    public ResultSet price_of_item_in_contract(int item_no, int contract_no) {
+    public double price_of_item_in_contract(int item_no, int contract_no) {
         String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no + " AND `CONTRACT-NO`=" + contract_no;
-        ResultSet rm;
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            rm = pstmt.executeQuery();
+        ResultSet rs = getResultSet(sql);
+        double rm;
+        try {
+            rm = rs.getDouble(1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            rm = null;
+            rm = 0;
         }
         return rm;
     }
 
     //Query 10
-    public ResultSet find_supplier_no_for_contract(int contract_no) {
+    public Supplier find_supplier_no_for_contract(int contract_no) {
         String sql = "SELECT `SUPPLIER-NO` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no;
         ResultSet rm;
-        ResultSet supplier_info = null;
+        Supplier supplier = null;
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             rm = pstmt.executeQuery();
 
             while (rm.next()) {
-                supplier_info = find_supplier(rm.getInt("SUPPLIER-NO"));
+                ResultSet rs = find_supplier(rm.getInt("SUPPLIER-NO"));
+                supplier = new Supplier(rs.getInt(1), rs.getString(2), rs.getString(3));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return supplier_info;
+        return supplier;
     }
 
     //Query 10 part2
     public ResultSet find_supplier(int supplier_no) {
         String sql = "SELECT * FROM `Suppliers` WHERE `SUPPLIER-NO`=" + supplier_no;
-        ResultSet rm;
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            rm = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rm = null;
-        }
+        ResultSet rm = getResultSet(sql);
         return rm;
     }
 
@@ -252,15 +285,7 @@ public class sql {
 
         String s = "SELECT SUM(`ORDER-QTY`) FROM (`Made-Of`) WHERE (`ORDER-NO`, `ITEM-NO`) IN (" +
                 "SELECT * FROM Orders WHERE `CONTRACT-NO`=" + contract_no;
-        ResultSet sum_quantity;
-
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            sum_quantity = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            sum_quantity = null;
-        }
+        ResultSet sum_quantity = getResultSet(s);
 
         try {
             sum_qty = sum_quantity.getInt(1);
@@ -274,7 +299,7 @@ public class sql {
 
     }
 
-    public ResultSet summerize_purchases() {
+    public LinkedList<SummarizedPurchase> summerize_purchases() {
 
         String sql = "SELECT `CONTRACT-NO`, `ORDER-NO`, `ITEM-NO`, `ORDER-QTY` INTO `Temp_table` FROM 'Orders', `Made-Of`";
 
@@ -295,33 +320,20 @@ public class sql {
         }
 
         String sql3 = "SELECT `CONTRACT-NO`, `ITEM-NO`, SUM(`ORDER-QTY`) FROM `Temp_table` GROUP BY `CONTRACT-NO`, `ORDER-NO`";
-        ResultSet rm;
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql3)) {
-            rm = pstmt.executeQuery();
+        ResultSet rs = getResultSet(sql3);
+        LinkedList<SummarizedPurchase> rm = new LinkedList<>();
+        try {
+            while (rs.next())
+                rm.add(new SummarizedPurchase(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            rm = null;
         }
 
         return rm;
 
     }
 
-    private ResultSet getResultSet(String sql) {
-        ResultSet rs;
-        try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            rs = null;
-        }
-        return rs;
-    }
 
-    private void sendInsertQuery(String sql) {
 
-    }
 }
