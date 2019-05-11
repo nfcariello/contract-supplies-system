@@ -1,5 +1,5 @@
 .body {
-    -fx-background-color: radial-gradient(focus-distance 0%, center 52% 52%, radius 44%, #FFAFBD, #FFC3A0);
+    -fx-background-color: linear-gradient(to bottom right, #9DBFFD, #C4ECFB)
 }
 
 .menuButton {
@@ -60,7 +60,8 @@
     -fx-start-margin: 20;
     -fx-end-margin: 20;
     -fx-pref-height: 60;
-    -fx-pref-width: 120;
+    -fx-min-width: 120;
+    -fx-max-width: 190;
     -fx-padding: 10px 20px;
     -fx-text-align: center;
     -fx-text-decoration: none;
@@ -78,6 +79,10 @@
     -fx-text-fill: #4093B7;
 }
 
+.menu-item, .context-menu {
+    -fx-background-color: #1A1A1C;
+}
+
 .sidebar {
     -fx-padding: 30px 0 10px 15px;
 }
@@ -92,7 +97,6 @@
 }
 
 .pillButton {
-    -fx-background-color: #ddd;
     -fx-border: none;
     -fx-color: black;
     -fx-padding: 10px 20px;
@@ -101,12 +105,18 @@
     -fx-display: inline-block;
     -fx-margin: 4px 2px;
     -fx-cursor: pointer;
-    -fx-border-radius: 40px;
+    -fx-background-color: #1A1A1C;
     -fx-font-family: Helvetica;
-    -fx-text-fill: black;
     -fx-font-size: 16px;
     -fx-start-margin: 20;
     -fx-end-margin: 20;
+    -fx-pref-height: 40;
+    -fx-pref-width: 120;
+    -fx-text-fill: #F9F8F8;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-letter-spacing: 0;
+    -fx-border-insets: 20px 0 0 20px;
 }
 
 .pillButton:hover {
@@ -129,7 +139,7 @@
     -fx-line-height: normal;
     -fx-letter-spacing: normal;
     -fx-text-align: center;
-    -fx-text-fill: black;
+    -fx-text-fill: #262432;
 }
 
 .subTitle {

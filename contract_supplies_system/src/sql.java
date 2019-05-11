@@ -1,5 +1,4 @@
 import source.*;
-import sun.awt.image.ImageWatched;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -156,12 +155,12 @@ public class sql {
     //WILL RETURN LINKED LIST OF ITEM CLASS WITH NUMBER AND DESCRIPTION
     public LinkedList<Item> find_items_in_order(int order_no) {
         String sql = "SELECT `ITEM-NO`, `ITEM-DESCRIPTION` FROM Items WHERE `ITEM-NO` IN ( " +
-                " SELECT `ITEM-NO` FROM `Made-Of` WHERE `ORDER-NO`=" + order_no;
-        //Not sure why its not allowing closing parentheses
+                " SELECT `ITEM-NO` FROM 'Made-Of' WHERE `ORDER-NO`=" + order_no + ")";
+        //Not sure why its not allowing closing parentheses - Resolved
         ResultSet rs = getResultSet(sql);
         LinkedList<Item> items = new LinkedList<>();
         try {
-            while (rs.next()) {
+            if (rs != null) while (rs.next()) {
                 items.add(new Item(rs.getInt(1), rs.getString(2)));
             }
         } catch (SQLException e) {
@@ -206,7 +205,7 @@ public class sql {
 
     // Query 8
     public LinkedList<Integer> find_orders_for_item(int item_no) {
-        String sql = "SELECT `ORDER-NO` FROM `Made-Of` WHERE `ITEM-NO`=" + item_no;
+        String sql = "SELECT `ORDER-NO` FROM 'Made-Of' WHERE `ITEM-NO`=" + item_no;
         ResultSet rs = getResultSet(sql);
         LinkedList<Integer> order_nums = new LinkedList<>();
         try {
@@ -222,7 +221,7 @@ public class sql {
 
     // Query 9
     public double price_of_item_in_contract(int item_no, int contract_no) {
-        String sql = "SELECT `CONTRACT-PRICE` FROM `To-Supply` WHERE `ITEM-NO`=" + item_no + " AND `CONTRACT-NO`=" + contract_no;
+        String sql = "SELECT `CONTRACT-PRICE` FROM 'To-Supply' WHERE `ITEM-NO`=" + item_no + " AND `CONTRACT-NO`=" + contract_no;
         ResultSet rs = getResultSet(sql);
         double rm;
         try {
@@ -236,7 +235,7 @@ public class sql {
 
     //Query 10
     public Supplier find_supplier_no_for_contract(int contract_no) {
-        String sql = "SELECT `SUPPLIER-NO` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no;
+        String sql = "SELECT `SUPPLIER-NO` FROM 'CONTRACTS' WHERE `CONTRACT-NO`=" + contract_no;
         ResultSet rm;
         Supplier supplier = null;
         try (Connection conn = this.connect();
@@ -262,8 +261,9 @@ public class sql {
 
 
     //Query 11
+    // TODO - `CONTRACT-AMOUNT` doesn't exist in 'CONTRACTS' ??
     public int find_quantity_left(int item_no, int contract_no) {
-        String sql = "SELECT `CONTRACT-AMOUNT` FROM `CONTRACTS` WHERE `CONTRACT-NO`=" + contract_no + "AND `ITEM-NO`= " + item_no;
+        String sql = "SELECT `CONTRACT-AMOUNT` FROM 'CONTRACTS' WHERE `CONTRACT-NO`=" + contract_no + "AND `ITEM-NO`= " + item_no;
         ResultSet contract_amount;
         int contract_amt;
         int sum_qty;
@@ -333,7 +333,5 @@ public class sql {
         return rm;
 
     }
-
-
 
 }

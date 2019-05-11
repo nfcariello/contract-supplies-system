@@ -11,7 +11,7 @@ import java.io.File;
 
 public abstract class SideBar extends Application {
 
-    protected HBox getMenuSidebar(ImageView imageView, Button projectBtn, Button itemBtn, Button contractBtn, Button supplierBtn, MenuButton orderBtn) {
+    protected HBox getMenuSidebar(ImageView imageView, Button projectBtn, MenuButton itemBtn, MenuButton contractBtn, Button supplierBtn, MenuButton orderBtn) {
         HBox sideBar = new HBox(10);
         sideBar.getStyleClass().add("sidebar");
         sideBar.getChildren().add(imageView);
