@@ -4,9 +4,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-class ViewUtils {
+class ViewUtils extends sql {
 
-    sql sql_query = new sql();
+//    private sql sql_query = new sql();
 
     ViewUtils() {
     }
@@ -33,7 +33,7 @@ class ViewUtils {
             String supplierAddress = tfSupplierAddress.getText();
 
             if (!supplierName.isEmpty() && !supplierAddress.isEmpty()) {
-                sql_query.insert_suppliers(supplierName, supplierAddress);
+                insert_suppliers(supplierName, supplierAddress);
                 tfSupplierName.setText("");
                 tfSupplierAddress.setText("");
             }
@@ -60,7 +60,7 @@ class ViewUtils {
         submitBtn.setOnAction(event -> {
             String projectData = tfProjectData.getText();
             if (!projectData.isEmpty()) {
-                sql_query.insert_project(projectData);
+                insert_project(projectData);
                 tfProjectData.setText("");
             }
         });

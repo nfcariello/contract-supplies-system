@@ -11,10 +11,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import source.Supplier;
 
-public class ContractView {
+class ContractView extends ViewUtils {
 
-    private final ViewUtils viewUtils = new ViewUtils();
-    sql sql_query = new sql();
+    private sql sql_query = new sql();
 
     ContractView() {
 
@@ -26,25 +25,25 @@ public class ContractView {
     VBox getContractView() {
         VBox contractView = new VBox(20);
         contractView.getStyleClass().add("container");
-        Label contractTitle = viewUtils.getTitleLabel("Create Contract", "title");
+        Label contractTitle = getTitleLabel("Create Contract", "title");
 
         TextField tfItemNumber = new TextField();
-        HBox itemNoHBox = viewUtils.getFormTextfield(10, "Item Number");
+        HBox itemNoHBox = getFormTextfield(10, "Item Number");
         itemNoHBox.getChildren().add(tfItemNumber);
 
         DatePicker datePicker = new DatePicker();
-        HBox dateOfContractHBox = viewUtils.getFormDatePicker("Date of Contract");
+        HBox dateOfContractHBox = getFormDatePicker("Date of Contract");
         dateOfContractHBox.getChildren().add(datePicker);
 
         TextField tfContractPrice = new TextField();
-        HBox contractPriceHBox = viewUtils.getFormTextfield(10, "Contract Price");
+        HBox contractPriceHBox = getFormTextfield(10, "Contract Price");
         contractPriceHBox.getChildren().add(tfContractPrice);
 
         TextField tfContractAmount = new TextField();
-        HBox contractAmountHBox = viewUtils.getFormTextfield(10, "Contract Amount");
+        HBox contractAmountHBox = getFormTextfield(10, "Contract Amount");
         contractAmountHBox.getChildren().add(tfContractAmount);
 
-        Button submitBtn = viewUtils.getSubmitButton();
+        Button submitBtn = getSubmitButton();
         submitBtn.setOnAction(event -> {
             // TODO: UI - Item Number, Date of Contract, Contract Price, Contract Amount
 //     TODO: SQL - Supplier Number, Date of Contract
@@ -75,7 +74,7 @@ public class ContractView {
         VBox priceOfItemView = new VBox(10);
         priceOfItemView.getStyleClass().add("container");
 
-        Label findItemTitle = viewUtils.getTitleLabel("Price Of Item In Contract", "title");
+        Label findItemTitle = getTitleLabel("Price Of Item In Contract", "title");
 
         HBox searchHbox = new HBox(20);
         searchHbox.setAlignment(Pos.CENTER);
@@ -133,7 +132,7 @@ public class ContractView {
         VBox priceOfItemView = new VBox(10);
         priceOfItemView.getStyleClass().add("container");
 
-        Label findItemTitle = viewUtils.getTitleLabel("Find Supplier", "title");
+        Label findItemTitle = getTitleLabel("Find Supplier", "title");
 
         HBox searchHbox = new HBox(20);
         searchHbox.setAlignment(Pos.CENTER);
@@ -188,7 +187,7 @@ public class ContractView {
         VBox findQuantityLeftView = new VBox(10);
         findQuantityLeftView.getStyleClass().add("container");
 
-        Label findItemTitle = viewUtils.getTitleLabel("Find Quantity Left", "title");
+        Label findItemTitle = getTitleLabel("Find Quantity Left", "title");
 
         HBox searchHbox = new HBox(20);
         searchHbox.setAlignment(Pos.CENTER);

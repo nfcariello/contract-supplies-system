@@ -15,10 +15,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
-public class OrderView {
+public class OrderView extends ViewUtils {
 
-    private final ViewUtils viewUtils = new ViewUtils();
-    sql sql_query = new sql();
+    private sql sql_query = new sql();
 
     OrderView() {
 
@@ -30,22 +29,22 @@ public class OrderView {
     VBox getOrderView() {
         VBox orderView = new VBox(20);
         orderView.getStyleClass().add("container");
-        Label orderTitle = viewUtils.getTitleLabel("Create Order", "title");
+        Label orderTitle = getTitleLabel("Create Order", "title");
 
         /*
         Order Details
 * */
         VBox orderDetailVBox = new VBox(20);
         DatePicker dPDateRequired = new DatePicker();
-        HBox dateRequiredHBox = viewUtils.getFormDatePicker("Date Required");
+        HBox dateRequiredHBox = getFormDatePicker("Date Required");
         dateRequiredHBox.getChildren().add(dPDateRequired);
 
         TextField tfProjectNumber = new TextField();
-        HBox projectNoHBox = viewUtils.getFormTextfield(10, "Project No");
+        HBox projectNoHBox = getFormTextfield(10, "Project No");
         projectNoHBox.getChildren().add(tfProjectNumber);
 
         TextField tfContractNumber = new TextField();
-        HBox contractNoHBox = viewUtils.getFormTextfield(10, "Contract No");
+        HBox contractNoHBox = getFormTextfield(10, "Contract No");
         contractNoHBox.getChildren().add(tfContractNumber);
 
         orderDetailVBox.getChildren().addAll(orderTitle, dateRequiredHBox, projectNoHBox, contractNoHBox);
@@ -68,11 +67,11 @@ public class OrderView {
         orderedItemTableView.setPrefSize(400, 200);
 
         TextField tfItemNumber = new TextField();
-        HBox itemNumberHBox = viewUtils.getFormTextfield(10, "Item Number");
+        HBox itemNumberHBox = getFormTextfield(10, "Item Number");
         itemNumberHBox.getChildren().add(tfItemNumber);
 
         TextField tfOrderQuantity = new TextField();
-        HBox orderQuantityHBox = viewUtils.getFormTextfield(10, "Order Quantity");
+        HBox orderQuantityHBox = getFormTextfield(10, "Order Quantity");
         orderQuantityHBox.getChildren().add(tfOrderQuantity);
         Button addBtn = new Button("Add");
 
@@ -93,7 +92,7 @@ public class OrderView {
         borderPane.setLeft(orderDetailVBox);
         borderPane.setRight(orderedItemVBox);
 
-        Button submitBtn = viewUtils.getSubmitButton();
+        Button submitBtn = getSubmitButton();
 
         submitBtn.setOnAction(event -> {
             LocalDate dateRequired = dPDateRequired.getValue();
@@ -121,7 +120,7 @@ public class OrderView {
         VBox findItemView = new VBox(10);
         findItemView.getStyleClass().add("container");
 
-        Label findItemTitle = viewUtils.getTitleLabel("Find Items in Order", "title");
+        Label findItemTitle = getTitleLabel("Find Items in Order", "title");
 
         HBox searchHbox = new HBox(20);
         searchHbox.setAlignment(Pos.CENTER);
@@ -182,7 +181,7 @@ public class OrderView {
         VBox priceOfItemView = new VBox(10);
         priceOfItemView.getStyleClass().add("container");
 
-        Label findItemTitle = viewUtils.getTitleLabel("Price Of Item In Order", "title");
+        Label findItemTitle = getTitleLabel("Price Of Item In Order", "title");
 
         HBox searchHbox = new HBox(20);
         searchHbox.setAlignment(Pos.CENTER);
