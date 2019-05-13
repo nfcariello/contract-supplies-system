@@ -99,8 +99,11 @@ public class OrderView extends ViewUtils {
             int projectNumber = Integer.parseInt(tfProjectNumber.getText());
             int contractNumber = Integer.parseInt(tfContractNumber.getText());
 
+            System.out.println("OrderItems: " + orderedItems.toString());
+
             Date date = new Date(dateRequired.toEpochDay());
-            sql_query.insert_order(date, projectNumber, contractNumber, orderedItems);
+            insert_order(date, projectNumber, contractNumber, orderedItems);
+
 //            Cleanup
             orderedItems.clear();
             orderedItemTableView.getItems().clear();
@@ -160,9 +163,9 @@ public class OrderView extends ViewUtils {
             findItemTableView.getItems().clear();
             LinkedList<Item> resultFindItem = sql_query.find_items_in_order(Integer.parseInt(searchField.getText()));
 
-            for (int i = 0; i < resultFindItem.size(); i++) {
-                int itemNumber = resultFindItem.get(i).getItemNo();
-                String itemDescription = resultFindItem.get(i).getDesc();
+            for (Item item : resultFindItem) {
+                int itemNumber = item.getItemNo();
+                String itemDescription = item.getDesc();
 
                 findItemTableView.getItems().add(new Item(itemNumber, itemDescription));
             }

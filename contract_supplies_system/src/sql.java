@@ -135,7 +135,7 @@ public class sql {
 
             on = find_order(project_number, contract_number);
 
-            while (items != null) {
+            while (items.size() != 0) {
                 OrderedItem current = items.pop();
 
                 String sql2 = "INSERT INTO `Made-Of`(`ORDER-NO`,`ITEM-NO`,`ORDER-QTY`) VALUES(?,?,?)";
