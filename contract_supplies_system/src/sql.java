@@ -29,15 +29,15 @@ public class sql {
             System.out.println(e.getMessage());
             rs1 = null;
         }
-        finally {
-            if (connx != null) {
-                try {
-                    connx.close(); // <-- This is important
-                } catch (SQLException e) {
-                    /* handle exception */
-                }
-            }
-        }
+//        finally {
+//            if (connx != null) {
+//                try {
+//                    connx.close(); // <-- This is important
+//                } catch (SQLException e) {
+//                    /* handle exception */
+//                }
+//            }
+//        }
         return rs1;
     }
 
@@ -205,7 +205,6 @@ public class sql {
             }
 
 
-
             while (items.size() != 0) {
                 OrderedItem current = items.pop();
 
@@ -346,9 +345,10 @@ public class sql {
             System.out.println(e.getMessage());
             contract_amt = 0;
         }
-        System.out.println("AMOUNT: " + contract_amount);
+        System.out.println("AMOUNT: " + contract_amount.toString());
 
-        String s = "SELECT SUM(`ORDER-QTY`) FROM 'Made-Of' WHERE (SELECT `ORDER-NO` FROM Orders WHERE 'CONTRACT-NO'=" + contract_no + ") AND 'ITEM-NO'=" + item_no;
+        String s = "SELECT SUM(\"ORDER-QTY\") FROM 'Made-Of' WHERE (SELECT \"ORDER-NO\" FROM Orders WHERE \"CONTRACT-NO\"=" + contract_no + ") AND \"ITEM-NO\"=" + item_no;
+//        String s = "SELECT SUM(ORDER-QTY) FROM 'Made-Of' WHERE (SELECT ORDER-NO FROM Orders WHERE CONTRACT-NO=" + contract_no + ") AND ITEM-NO=" + item_no;
         ResultSet sum_quantity = getResultSet(s);
         //System.out.println("ResultSet: " + sum_quantity + "Contract Number: " + contract_no + " ItemNo: " + item_no);
 
