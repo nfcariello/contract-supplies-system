@@ -20,13 +20,23 @@ public class sql {
 
     private ResultSet getResultSet(String sql) {
         ResultSet rs1;
+        Connection connx = null;
         try {
-            Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            connx = this.connect();
+            PreparedStatement pstmt = connx.prepareStatement(sql);
             rs1 = pstmt.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             rs1 = null;
+        }
+        finally {
+            if (connx != null) {
+                try {
+                    connx.close(); // <-- This is important
+                } catch (SQLException e) {
+                    /* handle exception */
+                }
+            }
         }
         return rs1;
     }
@@ -79,9 +89,9 @@ public class sql {
 //     TODO: SQL - Supplier Number, Date of Contract
     public void insert_contracts(int supplier_number, Date contract_date, LinkedList<ContractedItem> itemList) {
         String sql = "INSERT INTO CONTRACTS(`SUPPLIER-NO`,`DATE-OF-CONTRACT`) VALUES(?,?)";
-
+        Connection conn = null;
         try {
-            Connection conn = this.connect();
+            conn = this.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, supplier_number);
             pstmt.setDate(2, contract_date);
@@ -89,14 +99,24 @@ public class sql {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+//        finally {
+//            if (conn != null) {
+//                try {
+//                    conn.close();
+//                } catch (SQLException e) {
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        }
+
 
         // GET CONTRACT NUMBER THAT WAS JUST MADE
         int contract_no;
         ResultSet temp;
         String sql3 = "SELECT rowid FROM CONTRACTS ORDER BY ROWID DESC limit 1";
         try {
-            Connection conn2 = this.connect();
-            PreparedStatement ps = conn2.prepareStatement(sql3);
+            //conn = this.connect();
+            PreparedStatement ps = conn.prepareStatement(sql3);
             temp = ps.executeQuery();
             System.out.println(temp);
             System.out.println(temp.getInt(1));
@@ -108,6 +128,16 @@ public class sql {
             System.out.println("YYYYYY");
 
         }
+//        finally {
+//            if (conn != null) {
+//                try {
+//                    conn.close();
+//                } catch (SQLException e) {
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        }
+
         System.out.println(contract_no);
 
         for (ContractedItem x : itemList) {
@@ -115,8 +145,8 @@ public class sql {
                     "VALUES(?,?,?,?)";
 
             try {
-                Connection conn3 = this.connect();
-                PreparedStatement pstmt = conn3.prepareStatement(sql2);
+                //Connection conn = this.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql2);
                 pstmt.setInt(1, contract_no);
                 pstmt.setInt(2, x.getItemNo());
                 pstmt.setInt(3, x.getAmount());
@@ -124,6 +154,15 @@ public class sql {
                 pstmt.executeUpdate();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+            }
+            finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
             }
         }
     }
@@ -140,14 +179,28 @@ public class sql {
             pstmt.setInt(3, contract_number);
             pstmt.executeUpdate();
 
-            on = find_order(project_number, contract_number);
+            int order_no;
+            ResultSet temp;
+            String sql4 = "SELECT rowid FROM Orders ORDER BY ROWID DESC limit 1";
+            try {
+                //conn = this.connect();
+                PreparedStatement ps = conn.prepareStatement(sql4);
+                temp = ps.executeQuery();
+                order_no = temp.getInt(1);
+            } catch (SQLException e) {
+                order_no = 0;
+                System.out.println("YYYYYY");
+
+            }
+
+
 
             while (items.size() != 0) {
                 OrderedItem current = items.pop();
 
                 String sql2 = "INSERT INTO `Made-Of`(`ORDER-NO`,`ITEM-NO`,`ORDER-QTY`) VALUES(?,?,?)";
                 PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-                pstmt2.setInt(1, on);
+                pstmt2.setInt(1, order_no);
                 pstmt2.setInt(2, current.getItemNo());
                 pstmt2.setInt(3, current.getOrderQty());
                 pstmt2.executeUpdate();
