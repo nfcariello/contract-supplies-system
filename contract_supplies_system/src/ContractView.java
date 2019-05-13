@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import source.ContractedItem;
 import source.OrderedItem;
 import source.Supplier;
 
@@ -41,76 +42,80 @@ class ContractView extends ViewUtils {
         HBox dateOfContractHBox = getFormDatePicker("Date of Contract");
         dateOfContractHBox.getChildren().add(datePicker);
 
-        TextField tfContractPrice = new TextField();
-        HBox contractPriceHBox = getFormTextfield(10, "Contract Price");
-        contractPriceHBox.getChildren().add(tfContractPrice);
-
-        TextField tfContractAmount = new TextField();
-        HBox contractAmountHBox = getFormTextfield(10, "Contract Amount");
-        contractAmountHBox.getChildren().add(tfContractAmount);
-
         /*
-        Ordered Items
+        Contracted Items
 * */
-        VBox orderedItemVBox = new VBox(20);
-        TableView orderedItemTableView = new TableView();
-        orderedItemTableView.setEditable(true);
+        VBox contactedItemVBox = new VBox(20);
+        TableView contractedItemTableView = new TableView();
+        contractedItemTableView.setEditable(true);
 //        Item Number
         TableColumn<String, OrderedItem> itemNumberColumn = new TableColumn<>("Item Number");
-        itemNumberColumn.prefWidthProperty().bind(orderedItemTableView.widthProperty().multiply(0.5));
+        itemNumberColumn.prefWidthProperty().bind(contractedItemTableView.widthProperty().multiply(0.3));
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<>("itemNo"));
-//        Order Quantity
-        TableColumn<String, OrderedItem> orderQuantityColumn = new TableColumn<>("Order Quantity");
-        orderQuantityColumn.prefWidthProperty().bind(orderedItemTableView.widthProperty().multiply(0.4));
-        orderQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("orderQty"));
+//        Contract Price
+        TableColumn<String, OrderedItem> contractPriceColumn = new TableColumn<>("Contract Price");
+        contractPriceColumn.prefWidthProperty().bind(contractedItemTableView.widthProperty().multiply(0.3));
+        contractPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        // Contract Amount
+        TableColumn<String, OrderedItem> contractAmountColumn = new TableColumn<>("Contract Amount");
+        contractAmountColumn.prefWidthProperty().bind(contractedItemTableView.widthProperty().multiply(0.3));
+        contractAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
 
-        orderedItemTableView.getColumns().addAll(itemNumberColumn, orderQuantityColumn);
-        orderedItemTableView.setPrefSize(400, 200);
+        contractedItemTableView.getColumns().addAll(itemNumberColumn, contractPriceColumn, contractAmountColumn);
+        contractedItemTableView.setPrefSize(400, 200);
 
         TextField tfItemNumber = new TextField();
         HBox itemNumberHBox = getFormTextfield(10, "Item Number");
         itemNumberHBox.getChildren().add(tfItemNumber);
 
-        TextField tfOrderQuantity = new TextField();
-        HBox orderQuantityHBox = getFormTextfield(10, "Order Quantity");
-        orderQuantityHBox.getChildren().add(tfOrderQuantity);
+        TextField tfContactPrice = new TextField();
+        HBox contactPriceHBox = getFormTextfield(10, "Contract Price");
+        contactPriceHBox.getChildren().add(tfContactPrice);
+
+        TextField tfContactAmount = new TextField();
+        HBox contactAmountHBox = getFormTextfield(10, "Contact Amount");
+        contactAmountHBox.getChildren().add(tfContactAmount);
         Button addBtn = new Button("Add");
 
-        LinkedList<OrderedItem> orderedItems = new LinkedList<>();
+        LinkedList<ContractedItem> contractedItems = new LinkedList<>();
         addBtn.setOnAction(event -> {
             int itemNumber = Integer.parseInt(tfItemNumber.getText());
-            int orderQuantity = Integer.parseInt(tfOrderQuantity.getText());
+            double contractPrice = Double.parseDouble(tfContactPrice.getText());
+            int contractAmount = Integer.parseInt(tfContactAmount.getText());
 
-            orderedItems.add(new OrderedItem(itemNumber, orderQuantity));
-            orderedItemTableView.getItems().add(new OrderedItem(itemNumber, orderQuantity));
+            contractedItems.add(new ContractedItem(itemNumber, contractPrice, contractAmount));
+            contractedItemTableView.getItems().add(new ContractedItem(itemNumber, contractPrice, contractAmount));
             tfItemNumber.setText("");
-            tfOrderQuantity.setText("");
+            tfContactPrice.setText("");
+            tfContactAmount.setText("");
         });
 
-        orderedItemVBox.getChildren().addAll(orderedItemTableView, itemNumberHBox, orderQuantityHBox, addBtn);
+        contactedItemVBox.getChildren().addAll(contractedItemTableView, itemNumberHBox, contactPriceHBox, contactAmountHBox, addBtn);
 
 
         Button submitBtn = getSubmitButton();
         submitBtn.setOnAction(event -> {
-//             TODO: UI - Item Number, Date of Contract, Contract Price, Contract Amount
-//     TODO: SQL - Supplier Number, Date of Contract
-            String itemNumber = tfSupplierNumber.getText();
+//       Item Number, Date of Contract, Contract Price, Contract Amount
+//      SQL - Supplier Number, Date of Contract
+            int itemNumber = Integer.parseInt(tfSupplierNumber.getText());
             LocalDate dateOfContract = datePicker.getValue();
-            String contractPrice = tfContractPrice.getText();
-            String contractAmount = tfContractAmount.getText();
-
-            if (!itemNumber.isEmpty() && !contractPrice.isEmpty() && !contractAmount.isEmpty()) {
-                Date date = new Date(dateOfContract.toEpochDay());
-//                TODO: UI, Connecting to Database
-//                insert_contracts(Integer.parseInt(itemNumber), date, Integer.parseInt(contractPrice), Integer.parseInt(contractAmount));
-            }
+            Date date = new Date(dateOfContract.toEpochDay());
+//                UI, Connecting to Database
+            insert_contracts(itemNumber, date, contractedItems);
+//            Cleanup Data
+            contractedItemTableView.getItems().clear();
+            contractedItems.clear();
+            tfSupplierNumber.setText("");
+            tfItemNumber.setText("");
+            tfContactPrice.setText("");
+            tfContactAmount.setText("");
         });
 
-        contractDetailVBox.getChildren().addAll(contractTitle, supplierNumberHBox, dateOfContractHBox, contractPriceHBox, contractAmountHBox);
+        contractDetailVBox.getChildren().addAll(contractTitle, supplierNumberHBox, dateOfContractHBox);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(contractDetailVBox);
-        borderPane.setRight(orderedItemVBox);
+        borderPane.setRight(contactedItemVBox);
 
         contractView.getChildren().addAll(borderPane, submitBtn);
 

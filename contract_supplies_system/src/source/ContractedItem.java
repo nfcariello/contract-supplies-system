@@ -2,17 +2,15 @@ package source;
 
 public class ContractedItem {
 
-    int itemNo;
-    double price;
-    int amount;
+    private int itemNo;
+    private double price;
+    private int amount;
 
-
-    public ContractedItem(int item, double p, int a) {
-        itemNo = item;
-        price = p;
-        amount = a;
+    public ContractedItem(int itemNo, double price, int amount) {
+        this.itemNo = itemNo;
+        this.price = price;
+        this.amount = amount;
     }
-
 
     public int getItemNo() {
         return itemNo;
