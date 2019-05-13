@@ -75,8 +75,8 @@ public class sql {
     }
 
     //Query 4
-    // TODO: UI - Item Number, Date of Contract, Contract Price, Contract Amount
-//     TODO: SQL - Supplier Number, Date of Contract
+    // Item Number, Date of Contract, Contract Price, Contract Amount
+//     Supplier Number, Date of Contract
     public void insert_contracts(int supplier_number, Date contract_date, LinkedList<ContractedItem> itemList) {
         String sql = "INSERT INTO CONTRACTS(`SUPPLIER-NO`,`DATE-OF-CONTRACT`) VALUES(?,?)";
 
