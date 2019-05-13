@@ -93,23 +93,30 @@ public class sql {
         // GET CONTRACT NUMBER THAT WAS JUST MADE
         int contract_no;
         ResultSet temp;
-        String sql3 = "SELECT last_insert_rowid()";
+        String sql3 = "SELECT rowid FROM CONTRACTS ORDER BY ROWID DESC limit 1";
         try {
-            Connection conn = this.connect();
-            PreparedStatement ps = conn.prepareStatement(sql3);
+            Connection conn2 = this.connect();
+            PreparedStatement ps = conn2.prepareStatement(sql3);
             temp = ps.executeQuery();
+            System.out.println(temp);
+            System.out.println(temp.getInt(1));
+            System.out.println(temp.getInt(1));
             contract_no = temp.getInt(1);
+            System.out.println(contract_no);
         } catch (SQLException e) {
             contract_no = 0;
+            System.out.println("YYYYYY");
+
         }
+        System.out.println(contract_no);
 
         for (ContractedItem x : itemList) {
             String sql2 = "INSERT INTO `To-Supply` (`CONTRACT-NO`, `ITEM-NO`, `CONTRACT-AMOUNT`, `CONTRACT-PRICE`) " +
                     "VALUES(?,?,?,?)";
 
             try {
-                Connection conn = this.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql2);
+                Connection conn3 = this.connect();
+                PreparedStatement pstmt = conn3.prepareStatement(sql2);
                 pstmt.setInt(1, contract_no);
                 pstmt.setInt(2, x.getItemNo());
                 pstmt.setInt(3, x.getAmount());
