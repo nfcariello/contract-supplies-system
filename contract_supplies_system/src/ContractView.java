@@ -88,6 +88,8 @@ class ContractView extends ViewUtils {
             tfItemNumber.setText("");
             tfContactPrice.setText("");
             tfContactAmount.setText("");
+//            System.out.println(itemNumber + "  " + contractPrice + "  " + contractAmount);
+//            System.out.println(contractedItems.size());
         });
 
         contactedItemVBox.getChildren().addAll(contractedItemTableView, itemNumberHBox, contactPriceHBox, contactAmountHBox, addBtn);

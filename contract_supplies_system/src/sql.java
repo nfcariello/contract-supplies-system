@@ -118,14 +118,10 @@ public class sql {
             //conn = this.connect();
             PreparedStatement ps = conn.prepareStatement(sql3);
             temp = ps.executeQuery();
-            System.out.println(temp);
-            System.out.println(temp.getInt(1));
-            System.out.println(temp.getInt(1));
             contract_no = temp.getInt(1);
-            System.out.println(contract_no);
+            //System.out.println(contract_no);
         } catch (SQLException e) {
             contract_no = 0;
-            System.out.println("YYYYYY");
 
         }
 //        finally {
@@ -138,9 +134,19 @@ public class sql {
 //            }
 //        }
 
-        System.out.println(contract_no);
+//        System.out.println(itemList.size());
+//        for (int i = 0; i < itemList.size(); i++) {
+//            ContractedItem x = itemList.removeFirst();
+//            System.out.println(x.getItemNo() + "  " + x.getAmount() + "  " + x.getPrice());
+//            System.out.println(itemList.size());
+//        }
 
-        for (ContractedItem x : itemList) {
+        ContractedItem current = null;
+        while (itemList.size() > 0) {
+            //System.out.println(itemList.size());
+            current = itemList.removeFirst();
+            //System.out.println(itemList.size());
+            //System.out.println(current.getItemNo() + "  " + current.getPrice() + "  " + current.getAmount() );
             String sql2 = "INSERT INTO `To-Supply` (`CONTRACT-NO`, `ITEM-NO`, `CONTRACT-AMOUNT`, `CONTRACT-PRICE`) " +
                     "VALUES(?,?,?,?)";
 
@@ -148,21 +154,28 @@ public class sql {
                 //Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql2);
                 pstmt.setInt(1, contract_no);
-                pstmt.setInt(2, x.getItemNo());
-                pstmt.setInt(3, x.getAmount());
-                pstmt.setDouble(4, x.getPrice());
+                pstmt.setInt(2, current.getItemNo());
+                pstmt.setInt(3, current.getAmount());
+                pstmt.setDouble(4, current.getPrice());
                 pstmt.executeUpdate();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-            finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
+//            finally {
+//                if (conn != null) {
+//                    try {
+//                        conn.close();
+//                    } catch (SQLException e) {
+//                        System.out.println(e.getMessage());
+//                    }
+//                }
+//            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -189,8 +202,6 @@ public class sql {
                 order_no = temp.getInt(1);
             } catch (SQLException e) {
                 order_no = 0;
-                System.out.println("YYYYYY");
-
             }
 
 
@@ -330,21 +341,27 @@ public class sql {
         contract_amount = getResultSet(sql);
         try {
             contract_amt = contract_amount.getInt(1);
+            System.out.println("CA - " + contract_amt);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             contract_amt = 0;
         }
+        System.out.println("AMOUNT: " + contract_amount);
 
         String s = "SELECT SUM(`ORDER-QTY`) FROM 'Made-Of' WHERE (SELECT `ORDER-NO` FROM Orders WHERE 'CONTRACT-NO'=" + contract_no + ") AND 'ITEM-NO'=" + item_no;
         ResultSet sum_quantity = getResultSet(s);
-        System.out.println("ResultSet: " + sum_quantity + "Contract Number: " + contract_no + " ItemNo: " + item_no);
+        //System.out.println("ResultSet: " + sum_quantity + "Contract Number: " + contract_no + " ItemNo: " + item_no);
 
         try {
             sum_qty = sum_quantity.getInt(1);
+            System.out.println("QY: " + sum_qty);
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             sum_qty = 0;
         }
+
+        System.out.println("QUAnTITY: " + sum_qty);
 
         return contract_amt - sum_qty;
     }
